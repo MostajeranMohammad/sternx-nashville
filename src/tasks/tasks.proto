@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package tasks;
+
+message Task {
+    optional string id = 1;
+    optional string parentTaskId = 2;
+    optional Task parentTask = 3;
+    optional string title = 4;
+    optional string description = 5;
+    optional google.protobuf.Timestamp createdAt = 6;    ;
+    optional google.protobuf.Timestamp updatedAt = 7;
+}
+
+service TasksService {
+    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {}
+    rpc UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse) {}
+    rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {}
+    rpc GetAllTasks(GetAllTasksRequest) returns (GetAllTasksResponse) {}
+}
+
+message CreateTaskRequest {
+    optional string parentTaskId = 1;
+    string title = 2;
+    optional string description = 3;
+}
+
+message CreateTaskResponse {
+    Task task = 1;
+}
+
+message UpdateTaskRequest {
+    string id = 1;
+    optional string parentTaskId = 2;
+    optional string title = 3;
+    optional string description = 4;
+}
+
+message UpdateTaskResponse {
+    Task task = 1;
+}
+
+message DeleteTaskRequest {
+    string id = 1;
+}
+
+message DeleteTaskResponse {
+    Task task = 1;
+}
+
+message GetAllTasksRequest {
+    int32 page_number = 1;
+    int32 page_size = 2;
+}
+
+message GetAllTasksResponse {
+    repeated Task tasks = 1;
+}
