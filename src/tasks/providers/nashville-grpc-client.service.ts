@@ -1,38 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { Client, ClientGrpc, Transport } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import {
+  CreateTaskRequest,
+  CreateTaskResponse,
+  DeleteTaskRequest,
+  DeleteTaskResponse,
+  GetAllTasksRequest,
+  GetAllTasksResponse,
+  TasksService,
+  UpdateTaskRequest,
+  UpdateTaskResponse,
+} from 'src/proto/tasks-interfaces';
 
 @Injectable()
-export class NashvilleGrpcClientService {
-  @Client({
-    transport: Transport.GRPC,
-    options: {
-      url: 'your-grpc-server-url',
-      package: 'your-grpc-service-package',
-      protoPath: 'your-grpc-service-proto-path',
-    },
-  })
-  private client: ClientGrpc;
+export class NashvilleGrpcClientService implements OnModuleInit {
+  constructor(@Inject('HERO_PACKAGE') private readonly client: ClientGrpc) {}
+  private tasksGrpcService: TasksService;
 
-  // private grpcService: YourGrpcService;
-
-  constructor() {
-    // this.grpcService =
-    //   this.client.getService<YourGrpcService>('YourGrpcService');
+  onModuleInit() {
+    this.tasksGrpcService =
+      this.client.getService<TasksService>('TasksService');
   }
 
-  // createTask(request: CreateTaskRequest): Observable<CreateTaskResponse> {
-  //   return this.grpcService.createTask(request);
-  // }
+  createTask(request: CreateTaskRequest): Observable<CreateTaskResponse> {
+    return this.tasksGrpcService.CreateTask(request);
+  }
 
-  // updateTask(request: UpdateTaskRequest): Observable<UpdateTaskResponse> {
-  //   return this.grpcService.updateTask(request);
-  // }
+  updateTask(request: UpdateTaskRequest): Observable<UpdateTaskResponse> {
+    return this.tasksGrpcService.UpdateTask(request);
+  }
 
-  // deleteTask(request: DeleteTaskRequest): Observable<DeleteTaskResponse> {
-  //   return this.grpcService.deleteTask(request);
-  // }
+  deleteTask(request: DeleteTaskRequest): Observable<DeleteTaskResponse> {
+    return this.tasksGrpcService.DeleteTask(request);
+  }
 
-  // getAllTasks(request: GetAllTasksRequest): Observable<GetAllTasksResponse> {
-  //   return this.grpcService.getAllTasks(request);
-  // }
+  getAllTasks(request: GetAllTasksRequest): Observable<GetAllTasksResponse> {
+    return this.tasksGrpcService.GetAllTasks(request);
+  }
 }

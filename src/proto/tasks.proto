@@ -10,7 +10,7 @@ message Task {
     optional Task parentTask = 3;
     optional string title = 4;
     optional string description = 5;
-    optional google.protobuf.Timestamp createdAt = 6;    ;
+    optional google.protobuf.Timestamp createdAt = 6;
     optional google.protobuf.Timestamp updatedAt = 7;
 }
 

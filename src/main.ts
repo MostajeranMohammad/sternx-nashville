@@ -9,17 +9,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.GRPC,
-  //   options: {
-  //     package: 'tasks',
-  //     protoPath: join(__dirname, 'proto/tasks.proto'),
-  //     url: `${configService.get<string>(
-  //       'NASHVILLE_GRPC_ENDPOINT',
-  //     )}:${configService.get<number>('NASHVILLE_GRPC_PORT')}`,
-  //   },
-  // });
-  // await app.startAllMicroservices();
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.GRPC,
+    options: {
+      package: 'tasks',
+      protoPath: join(__dirname, 'proto/tasks.proto'),
+      url: `${configService.get<string>(
+        'NASHVILLE_GRPC_ENDPOINT',
+      )}:${configService.get<number>('NASHVILLE_GRPC_PORT')}`,
+    },
+  });
+  await app.startAllMicroservices();
 
   const config = new DocumentBuilder()
     .setTitle('Nashville API')
