@@ -1,5 +1,4 @@
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -12,6 +11,7 @@ import { CreateTaskDto } from '../dto/create-task.dto';
   cors: {
     origin: '*',
   },
+  namespace: '/ws/tasks',
 })
 export class TasksWsController {
   constructor() {}
@@ -20,38 +20,32 @@ export class TasksWsController {
   server: Server;
 
   @SubscribeMessage('createTask')
-  async createTask(client: Socket, @MessageBody() body: CreateTaskDto) {
+  async createTask(client: Socket, body: CreateTaskDto) {
     // const result = await this.tasksService.createTask(body);
     // this.server.emit('taskCreated', result);
-    console.log('Task created');
+    client.emit('response', JSON.stringify(body));
   }
 
   @SubscribeMessage('getTasks')
-  async getTasks(
-    client: Socket,
-    @MessageBody() body: { pageSize: number; page: number },
-  ) {
+  async getTasks(client: Socket, body: { pageSize: number; page: number }) {
     // const result = await this.tasksService.getTasks(body);
     // return result;
-    console.log('Get tasks');
+    client.emit('response', JSON.stringify(body));
   }
 
   @SubscribeMessage('updateTask')
-  async updateTask(
-    client: Socket,
-    @MessageBody() body: { id: string } & UpdateTaskDto,
-  ) {
+  async updateTask(client: Socket, body: { id: string } & UpdateTaskDto) {
     // const result = await this.tasksService.updateTask(body);
     // this.server.emit('taskUpdated', result);
     // return 'Task updated';
-    console.log('Task updated');
+    client.emit('response', JSON.stringify(body));
   }
 
   @SubscribeMessage('deleteTask')
-  async deleteTask(client: Socket, @MessageBody() taskId: string) {
+  async deleteTask(client: Socket, taskId: string) {
     // const result = await this.tasksService.deleteTask(body);
     // this.server.emit('taskDeleted', result);
     // return 'Task deleted';
-    console.log('Task deleted');
+    client.emit('response', taskId);
   }
 }
