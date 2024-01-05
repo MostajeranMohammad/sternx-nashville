@@ -13,7 +13,9 @@ import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Injectable()
 export class NashvilleGrpcClientService implements OnModuleInit {
-  constructor(@Inject('HERO_PACKAGE') private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject('GALLATIN_SERVICE') private readonly client: ClientGrpc,
+  ) {}
   private tasksGrpcService: TasksService;
 
   onModuleInit() {
