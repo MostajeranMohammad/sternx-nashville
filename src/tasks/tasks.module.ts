@@ -10,7 +10,7 @@ import { NashvilleGrpcClientService } from './providers/nashville-grpc-client.se
   imports: [
     ClientsModule.registerAsync([
       {
-        name: 'GALLATIN_SERVICE',
+        name: 'TasksService',
         useFactory: (configService: ConfigService) => ({
           transport: Transport.GRPC,
           options: {

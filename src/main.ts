@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { LoggerService, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/exception-filter';
 
 async function bootstrap() {
@@ -12,10 +12,8 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
 
-  const logger = app.get<LoggerService>('Logger');
-
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new HttpExceptionFilter(logger));
+  app.useGlobalFilters(new HttpExceptionFilter(Logger));
 
   const config = new DocumentBuilder()
     .setTitle('Nashville API')
