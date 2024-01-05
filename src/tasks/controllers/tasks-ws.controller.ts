@@ -6,6 +6,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { CreateTaskDto } from '../dto/create-task.dto';
+import { NashvilleGrpcClientService } from '../providers/nashville-grpc-client.service';
 
 @WebSocketGateway({
   cors: {
@@ -14,38 +15,38 @@ import { CreateTaskDto } from '../dto/create-task.dto';
   namespace: '/ws/tasks',
 })
 export class TasksWsController {
-  constructor() {}
+  constructor(private readonly tasksService: NashvilleGrpcClientService) {}
 
   @WebSocketServer()
   server: Server;
 
   @SubscribeMessage('createTask')
-  async createTask(client: Socket, body: CreateTaskDto) {
-    // const result = await this.tasksService.createTask(body);
-    // this.server.emit('taskCreated', result);
-    client.emit('response', JSON.stringify(body));
+  createTask(client: Socket, body: CreateTaskDto) {
+    this.tasksService.createTask(body).subscribe((result) => {
+      client.emit('response', JSON.stringify(result));
+    });
   }
 
   @SubscribeMessage('getTasks')
   async getTasks(client: Socket, body: { pageSize: number; page: number }) {
-    // const result = await this.tasksService.getTasks(body);
-    // return result;
-    client.emit('response', JSON.stringify(body));
+    this.tasksService
+      .getAllTasks(body.pageSize, body.page)
+      .subscribe((result) => {
+        client.emit('response', JSON.stringify(result));
+      });
   }
 
   @SubscribeMessage('updateTask')
   async updateTask(client: Socket, body: { id: string } & UpdateTaskDto) {
-    // const result = await this.tasksService.updateTask(body);
-    // this.server.emit('taskUpdated', result);
-    // return 'Task updated';
-    client.emit('response', JSON.stringify(body));
+    this.tasksService.updateTask(body.id, body).subscribe((result) => {
+      client.emit('response', JSON.stringify(result));
+    });
   }
 
   @SubscribeMessage('deleteTask')
   async deleteTask(client: Socket, taskId: string) {
-    // const result = await this.tasksService.deleteTask(body);
-    // this.server.emit('taskDeleted', result);
-    // return 'Task deleted';
-    client.emit('response', taskId);
+    this.tasksService.deleteTask(taskId).subscribe((result) => {
+      client.emit('response', JSON.stringify(result));
+    });
   }
 }

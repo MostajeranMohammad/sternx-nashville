@@ -2,16 +2,14 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
-  CreateTaskRequest,
   CreateTaskResponse,
-  DeleteTaskRequest,
   DeleteTaskResponse,
-  GetAllTasksRequest,
   GetAllTasksResponse,
   TasksService,
-  UpdateTaskRequest,
   UpdateTaskResponse,
 } from 'src/proto/tasks-interfaces';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Injectable()
 export class NashvilleGrpcClientService implements OnModuleInit {
@@ -23,19 +21,36 @@ export class NashvilleGrpcClientService implements OnModuleInit {
       this.client.getService<TasksService>('TasksService');
   }
 
-  createTask(request: CreateTaskRequest): Observable<CreateTaskResponse> {
-    return this.tasksGrpcService.CreateTask(request);
+  createTask(body: CreateTaskDto): Observable<CreateTaskResponse> {
+    return this.tasksGrpcService.CreateTask({
+      title: body.title,
+      description: body.description,
+      parentTaskId: body.parentId,
+    });
   }
 
-  updateTask(request: UpdateTaskRequest): Observable<UpdateTaskResponse> {
-    return this.tasksGrpcService.UpdateTask(request);
+  updateTask(
+    taskId: string,
+    body: UpdateTaskDto,
+  ): Observable<UpdateTaskResponse> {
+    return this.tasksGrpcService.UpdateTask({
+      id: taskId,
+      title: body.title,
+      description: body.description,
+      parentTaskId: body.parentId,
+    });
   }
 
-  deleteTask(request: DeleteTaskRequest): Observable<DeleteTaskResponse> {
-    return this.tasksGrpcService.DeleteTask(request);
+  deleteTask(taskId: string): Observable<DeleteTaskResponse> {
+    return this.tasksGrpcService.DeleteTask({
+      id: taskId,
+    });
   }
 
-  getAllTasks(request: GetAllTasksRequest): Observable<GetAllTasksResponse> {
-    return this.tasksGrpcService.GetAllTasks(request);
+  getAllTasks(pageSize: number, page: number): Observable<GetAllTasksResponse> {
+    return this.tasksGrpcService.GetAllTasks({
+      pageNumber: page,
+      pageSize,
+    });
   }
 }
