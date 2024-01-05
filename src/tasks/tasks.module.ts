@@ -3,6 +3,7 @@ import { TasksWsController } from './controllers/tasks-ws.controller';
 import { TasksApiController } from './controllers/tasks-api.controller';
 
 @Module({
-  controllers: [TasksWsController, TasksApiController],
+  controllers: [TasksApiController],
+  providers: [TasksWsController],
 })
 export class TasksModule {}
