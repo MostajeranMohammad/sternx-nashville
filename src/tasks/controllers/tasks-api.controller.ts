@@ -27,7 +27,7 @@ export class TasksApiController {
   @ApiQuery({ name: 'page_size', type: Number, required: false })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @Get()
-  getTasks(@Query('page_size') pageSize: number, @Query('page') page: number) {
+  getTasks(@Query('page_size') pageSize: string, @Query('page') page: string) {
     return this.tasksService.getAllTasks(pageSize, page);
   }
 

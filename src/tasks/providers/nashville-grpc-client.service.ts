@@ -7,7 +7,7 @@ import {
   GetAllTasksResponse,
   TasksService,
   UpdateTaskResponse,
-} from 'src/proto/tasks-interfaces';
+} from 'src/proto/interfaces';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 
@@ -47,10 +47,10 @@ export class NashvilleGrpcClientService implements OnModuleInit {
     });
   }
 
-  getAllTasks(pageSize: number, page: number): Observable<GetAllTasksResponse> {
+  getAllTasks(pageSize: string, page: string): Observable<GetAllTasksResponse> {
     return this.tasksGrpcService.GetAllTasks({
-      pageNumber: page,
-      pageSize,
+      pageNumber: parseInt(page, 10) || 1,
+      pageSize: parseInt(pageSize, 10) || 10,
     });
   }
 }

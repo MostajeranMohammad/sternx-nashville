@@ -15,6 +15,7 @@ export interface Task {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  children?: Task[];
 }
 
 export interface CreateTaskRequest {

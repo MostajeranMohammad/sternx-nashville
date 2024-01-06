@@ -12,6 +12,7 @@ message Task {
     optional string description = 5;
     optional string createdAt = 6;
     optional string updatedAt = 7;
+    repeated Task children = 8;
 }
 
 service TasksService {

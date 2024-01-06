@@ -28,7 +28,7 @@ export class TasksWsController {
   }
 
   @SubscribeMessage('getTasks')
-  async getTasks(client: Socket, body: { pageSize: number; page: number }) {
+  async getTasks(client: Socket, body: { pageSize: string; page: string }) {
     this.tasksService
       .getAllTasks(body.pageSize, body.page)
       .subscribe((result) => {
