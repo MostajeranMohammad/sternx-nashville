@@ -13,8 +13,8 @@ export interface Task {
   parentTask?: Task;
   title?: string;
   description?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateTaskRequest {
